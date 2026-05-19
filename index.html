@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>◈ Halal Portfolio — Live</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFBFC;--white:#FFF;--card:#FFF;--border:#E8ECF1;--borderL:#F0F2F5;
+--ink:#0F172A;--ink2:#334155;--ink3:#64748B;--ink4:#94A3B8;
+--em:#059669;--emBg:#ECFDF5;--emBd:#A7F3D0;--rose:#E11D48;--roseBg:#FFF1F2;--roseBd:#FECDD3;
+--sky:#0284C7;--skyBg:#F0F9FF;--skyBd:#BAE6FD;--amber:#D97706;--amberBg:#FFFBEB;--amberBd:#FDE68A;
+--violet:#7C3AED;--violetBg:#F5F3FF;--violetBd:#DDD6FE;
+--sh:0 1px 3px rgba(15,23,42,.04),0 4px 12px rgba(15,23,42,.03);--shL:0 4px 24px rgba(15,23,42,.06);--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.mono{font-family:'DM Mono',monospace}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+#setup{display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#FAFBFC,#F1F5F9)}
+.setup-card{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:40px;max-width:460px;width:92%;box-shadow:var(--shL)}
+.setup-card h1{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:4px}
+.setup-card input{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--ink);outline:none;margin-bottom:16px}
+.setup-card input:focus{border-color:var(--em);box-shadow:0 0 0 3px rgba(5,150,105,.08)}
+.btn{padding:10px 20px;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.btn-p{background:var(--em);color:#fff;width:100%}.btn-p:hover{background:#047857}
+.btn-sm{padding:6px 14px;font-size:11px;border-radius:6px}
+.btn-o{background:transparent;border:1px solid var(--border);color:var(--ink2)}.btn-o:hover{background:var(--bg)}
+#loading{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px}
+.spinner{width:36px;height:36px;border:3px solid var(--border);border-top-color:var(--em);border-radius:50%;animation:spin .8s linear infinite}
+
+#app{display:none;padding:20px 24px;max-width:1400px;margin:0 auto}
+.sim{background:var(--amberBg);border:1px solid var(--amberBd);border-radius:8px;padding:8px 16px;margin-bottom:20px;display:flex;align-items:center;gap:8px}
+.sim span{color:var(--amber);font-size:11px;font-weight:600;letter-spacing:.04em}
+.tag{display:inline-flex;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:.04em}
+.t-em{background:var(--emBg);color:var(--em);border:1px solid var(--emBd)}
+.t-sky{background:var(--skyBg);color:var(--sky);border:1px solid var(--skyBd)}
+.t-amber{background:var(--amberBg);color:var(--amber);border:1px solid var(--amberBd)}
+.t-rose{background:var(--roseBg);color:var(--rose);border:1px solid var(--roseBd)}
+.t-violet{background:var(--violetBg);color:var(--violet);border:1px solid var(--violetBd)}
+.kpi-row{display:grid;gap:10px;margin-bottom:16px}
+.k7{grid-template-columns:repeat(7,1fr)}.k5{grid-template-columns:repeat(5,1fr)}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;position:relative;overflow:hidden;box-shadow:var(--sh)}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kpi .kl{color:var(--ink4);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.kpi .kv{font-size:22px;font-weight:700;line-height:1}.kpi .ks{color:var(--ink4);font-size:11px;margin-top:5px}
+.grid{display:grid;grid-template-columns:1fr 360px;gap:16px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh);overflow:hidden}
+.cp{padding:16px}.ct{color:var(--ink3);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg)}
+.tab{background:none;border:none;border-bottom:2px solid transparent;padding:10px 20px;color:var(--ink4);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.tab:hover{color:var(--ink2)}.tab.on{color:var(--em);border-bottom-color:var(--em);background:var(--white)}
+.tb{display:none}.tb.on{display:block}
+table{width:100%;border-collapse:collapse}th{padding:8px 10px;text-align:left;color:var(--ink4);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0}
+td{padding:8px 10px;border-bottom:1px solid var(--borderL)}tr:last-child td{border-bottom:none}tr:hover{background:rgba(5,150,105,.015)}
+.ni{padding:10px 0;border-bottom:1px solid var(--borderL)}.ni:last-child{border-bottom:none}
+.dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.empty{text-align:center;padding:48px 20px;color:var(--ink3)}
+.empty-icon{font-size:40px;margin-bottom:12px}.empty-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.empty-sub{font-size:13px;line-height:1.5;max-width:380px;margin:0 auto}
+.footer{margin-top:20px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.footer span{color:var(--ink4);font-size:10px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:80px}
+.bars div{flex:1;border-radius:3px 3px 0 0;min-width:4px;transition:height .4s}
+@media(max-width:960px){.grid{grid-template-columns:1fr}.k7{grid-template-columns:repeat(4,1fr)}}
+@media(max-width:600px){.k7,.k5{grid-template-columns:repeat(2,1fr)}#app{padding:12px}}
+</style>
+</head>
+<body>
+
+<!-- SETUP: Enter Railway backend URL -->
+<div id="setup">
+  <div class="setup-card">
+    <h1>◈ Halal Portfolio</h1>
+    <div style="color:var(--ink3);font-size:13px;margin-bottom:4px">Shariah-compliant paper trading simulation</div>
+    <div style="background:var(--amberBg);border:1px solid var(--amberBd);border-radius:8px;padding:8px 12px;margin:16px 0">
+      <span style="color:var(--amber);font-size:11px;font-weight:600">⚠ SIMULATION ONLY — No real money</span>
+    </div>
+    <label class="mono" style="display:block;color:var(--ink3);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px">Backend URL (Railway)</label>
+    <input type="url" id="urlInput" class="mono" placeholder="https://your-app.railway.app">
+    <button class="btn btn-p" onclick="connect()">Connect to Backend</button>
+    <div style="color:var(--ink4);font-size:11px;margin-top:12px;text-align:center">The backend handles all data fetching. This dashboard just displays it.</div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="mono" style="color:var(--em);font-size:13px">Connecting to backend...</div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="app"></div>
+
+<script>
+let API_URL = '';
+let POLL_INTERVAL = null;
+const $ = id => document.getElementById(id);
+const fmt = n => n >= 0 ? `+$${Math.abs(n).toFixed(2)}` : `-$${Math.abs(n).toFixed(2)}`;
+const fmtP = n => `${n>=0?'+':''}${Number(n).toFixed(2)}%`;
+const plC = n => n >= 0 ? 'var(--em)' : 'var(--rose)';
+const hC = h => ({'Intraday':'var(--amber)','1W-3M':'var(--sky)','3M+':'var(--violet)'}[h]||'var(--ink4)');
+const hBg = h => ({'Intraday':'var(--amberBg)','1W-3M':'var(--skyBg)','3M+':'var(--violetBg)'}[h]||'var(--bg)');
+const hBd = h => ({'Intraday':'var(--amberBd)','1W-3M':'var(--skyBd)','3M+':'var(--violetBd)'}[h]||'var(--border)');
+const esc = s => { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; };
+let currentTab = 'watchlist';
+
+function connect() {
+  let url = $('urlInput').value.trim().replace(/\/+$/, '');
+  if (!url) return;
+  if (!url.startsWith('http')) url = 'https://' + url;
+  localStorage.setItem('api_url', url);
+  API_URL = url;
+  startPolling();
+}
+
+function startPolling() {
+  $('setup').style.display = 'none';
+  $('loading').style.display = 'flex';
+  fetchState();
+  if (POLL_INTERVAL) clearInterval(POLL_INTERVAL);
+  POLL_INTERVAL = setInterval(fetchState, 30000); // Poll every 30s
+}
+
+async function fetchState() {
+  try {
+    const r = await fetch(API_URL + '/api/state');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    $('loading').style.display = 'none';
+    $('app').style.display = 'block';
+    render(data);
+  } catch(e) {
+    console.error('Fetch error:', e);
+    $('loading').style.display = 'none';
+    $('app').style.display = 'block';
+    $('app').innerHTML = `<div style="text-align:center;padding:60px 20px">
+      <div style="font-size:32px;margin-bottom:12px">⚠️</div>
+      <div style="font-size:17px;font-weight:700;margin-bottom:8px">Cannot reach backend</div>
+      <div style="color:var(--ink3);font-size:13px;margin-bottom:20px">${esc(e.message)}<br>URL: ${esc(API_URL)}</div>
+      <button class="btn btn-p" style="width:auto" onclick="resetSetup()">Re-enter URL</button>
+    </div>`;
+  }
+}
+
+function resetSetup() {
+  localStorage.removeItem('api_url');
+  if (POLL_INTERVAL) clearInterval(POLL_INTERVAL);
+  $('app').style.display = 'none';
+  $('setup').style.display = 'flex';
+}
+
+function triggerRefresh() {
+  fetch(API_URL + '/api/refresh', { method: 'POST' }).catch(() => {});
+  setTimeout(fetchState, 3000);
+}
+
+function switchTab(name) {
+  currentTab = name;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.t === name));
+  document.querySelectorAll('.tb').forEach(t => t.classList.toggle('on', t.id === 'tb-' + name));
+}
+
+// Auto-connect if URL saved
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('api_url');
+  if (saved) { API_URL = saved; startPolling(); }
+  $('urlInput').addEventListener('keydown', e => { if (e.key === 'Enter') connect(); });
+});
+
+function render(d) {
+  const pf = d.portfolio || [];
+  const wl = d.watchlist || [];
+  const trades = d.trades || [];
+  const news = d.news || [];
+  const trigs = d.triggers || [];
+  const pvH = d.pv_history || [];
+  const m = d.derived || {};
+  const phase = m.marketPhase || d.phase || 'idle';
+  const deployed = d.deployed || false;
+  const cash = d.cash || 0;
+  const tv = m.totalValue || cash;
+  const tPL = m.totalPL || 0;
+  const plPct = m.plPct || 0;
+  const cPct = m.cashPct || 100;
+  const shSc = m.shariahScore || 100;
+  const tFx = m.totalFx || 0;
+  const srt = [...pf].sort((a,b) => (b.changePct||0) - (a.changePct||0));
+  const bW = srt[0], bL = srt[srt.length-1];
+  const pLabel = {weekend:'Weekend',premarket:'Pre-Market',open:'Market Open',postmarket:'Post-Market',idle:'Idle'}[phase]||phase;
+  const pTag = phase==='open'?'t-em':phase==='premarket'?'t-amber':'t-sky';
+
+  // If first render and no holdings, default to watchlist tab
+  if (!deployed && currentTab === 'holdings') currentTab = 'watchlist';
+
+  $('app').innerHTML = `
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:4px">
+          <span style="font-size:18px;font-weight:700;letter-spacing:-.015em">◈ Halal Portfolio</span>
+          <span class="mono tag t-em">S&P SHARIAH</span>
+          <span class="mono tag ${pTag}" ${phase==='open'?'style="animation:pulse 2s infinite"':''}>${phase==='open'?'● ':''}${pLabel}</span>
+          <span class="mono tag t-violet">TFSA</span>
+        </div>
+        <div style="color:var(--ink4);font-size:11px">Wealthsimple Trade · CAD · Finnhub Live · Backend: Railway</div>
+      </div>
+      <div style="text-align:right">
+        <div class="mono" style="color:var(--ink4);font-size:9px">ET TIME</div>
+        <div class="mono" style="font-size:22px;font-weight:700;color:var(--em)">${m.etTime||'--:--'}</div>
+        ${d.last_refresh?`<div class="mono" style="color:var(--ink4);font-size:9px">Refreshed: ${new Date(d.last_refresh).toLocaleTimeString('en-CA')}</div>`:''}
+      </div>
+    </div>
+
+    <div class="sim">⚠️ <span class="mono">SIMULATION — Live prices, live news, zero real money, no trades executed</span></div>
+
+    ${trigs.length?`<div style="background:var(--roseBg);border:1px solid var(--roseBd);border-radius:8px;padding:10px 14px;margin-bottom:16px">
+      <div class="mono" style="color:var(--rose);font-size:11px;font-weight:700">⚡ ${trigs.length} Trigger${trigs.length>1?'s':''}</div>
+      ${trigs.slice(0,3).map(t=>`<div class="mono" style="color:var(--ink2);font-size:11px">[${t.type}] ${t.ticker}: ${t.detail}</div>`).join('')}
+    </div>`:''}
+
+    <div class="kpi-row k7">
+      ${kpi('Portfolio Value',`$${tv.toFixed(0)}`,'CAD · Live','var(--em)')}
+      ${kpi('Cash',`$${cash.toFixed(0)}`,`${cPct}%`,'var(--sky)')}
+      ${kpi('Net P&L',pf.length?fmt(tPL):'$0.00',pf.length?fmtP(plPct):'Awaiting open',plC(tPL))}
+      ${kpi('Positions',pf.length.toString(),deployed?'Deployed':'Awaiting','var(--violet)')}
+      ${kpi('Shariah',`${shSc}%`,'compliant',shSc>=100?'var(--em)':'var(--amber)')}
+      ${kpi('Gainer',bW?.ticker||'—',bW?fmtP(bW.changePct):'','var(--em)')}
+      ${kpi('Risk',bL?.ticker||'—',bL?fmtP(bL.changePct):'','var(--rose)')}
+    </div>
+
+    <div class="grid">
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card cp">
+          <div class="mono ct">Portfolio Value</div>
+          <div class="bars">${chartBars(pvH)}</div>
+        </div>
+        <div class="card">
+          <div class="tabs">
+            <button class="tab mono${currentTab==='watchlist'?' on':''}" data-t="watchlist" onclick="switchTab('watchlist')">Watchlist</button>
+            <button class="tab mono${currentTab==='holdings'?' on':''}" data-t="holdings" onclick="switchTab('holdings')">Holdings</button>
+            <button class="tab mono${currentTab==='trades'?' on':''}" data-t="trades" onclick="switchTab('trades')">Trades</button>
+          </div>
+
+          <div id="tb-watchlist" class="tb${currentTab==='watchlist'?' on':''}" style="overflow-x:auto">
+            <table><thead><tr>${['Ticker','Name','Exchange','Sector','Hold','Price','Shariah'].map(h=>`<th class="mono">${h}</th>`).join('')}</tr></thead>
+            <tbody>${wl.map((w,i)=>`<tr style="animation:fadeUp .3s ease ${i*.03}s both">
+              <td class="mono" style="font-weight:600;font-size:12px">${w.ticker}</td>
+              <td style="color:var(--ink2);font-size:11px">${w.name}</td>
+              <td class="mono" style="font-size:10px;color:var(--ink3)">${w.exchange}</td>
+              <td style="color:var(--ink3);font-size:11px">${w.sector}</td>
+              <td><span class="mono tag" style="background:${hBg(w.hold)};color:${hC(w.hold)};border:1px solid ${hBd(w.hold)}">${w.hold}</span></td>
+              <td class="mono" style="font-size:12px;font-weight:600">${w.lastPrice?'$'+w.lastPrice.toFixed(2):'—'}</td>
+              <td>${shTag(w)}</td>
+            </tr>`).join('')}</tbody></table>
+            ${!deployed?`<div style="padding:10px 16px;background:var(--amberBg);border-top:1px solid var(--amberBd)">
+              <span class="mono" style="color:var(--amber);font-size:10px">◷ Buys execute automatically at market open (9:30 AM ET)</span>
+            </div>`:''}
+          </div>
+
+          <div id="tb-holdings" class="tb${currentTab==='holdings'?' on':''}" style="overflow-x:auto">
+            ${pf.length?`<table><thead><tr>${['Ticker','Sector','Hold','Entry','Current','Change','Value','P&L','Target','Stop','Shariah'].map(h=>`<th class="mono">${h}</th>`).join('')}</tr></thead>
+            <tbody>${pf.map((p,i)=>`<tr style="animation:fadeUp .3s ease ${i*.03}s both">
+              <td><div class="mono" style="font-weight:600;font-size:12px">${p.ticker}</div><div class="mono" style="color:var(--ink4);font-size:9px">${p.exchange}</div></td>
+              <td style="color:var(--ink3);font-size:11px">${p.sector}</td>
+              <td><span class="mono tag" style="background:${hBg(p.hold)};color:${hC(p.hold)};border:1px solid ${hBd(p.hold)}">${p.hold}</span></td>
+              <td class="mono" style="font-size:11px;color:var(--ink3)">$${(p.entryPrice||0).toFixed(2)}</td>
+              <td class="mono" style="font-size:11px;font-weight:600">$${(p.currentPrice||0).toFixed(2)}</td>
+              <td class="mono" style="font-size:11px;font-weight:600;color:${plC(p.changePct||0)}">${fmtP(p.changePct||0)}</td>
+              <td class="mono" style="font-size:11px">$${(p.value||0).toFixed(0)}</td>
+              <td class="mono" style="font-size:11px;font-weight:700;color:${plC(p.pl||0)}">${fmt(p.pl||0)}</td>
+              <td class="mono" style="font-size:11px;color:var(--em)">$${(p.target||0).toFixed(2)}</td>
+              <td class="mono" style="font-size:11px;color:var(--rose)">$${(p.stopLoss||0).toFixed(2)}</td>
+              <td>${shTag(p)}</td>
+            </tr>`).join('')}</tbody></table>`
+            :`<div class="empty"><div class="empty-icon">${phase==='weekend'?'📅':phase==='premarket'?'🌅':'📊'}</div>
+              <div class="empty-title">No Holdings Yet</div>
+              <div class="empty-sub">${phase==='open'?'Buys executing...':phase==='premarket'?'Market opens at 9:30 AM ET. Buys will execute automatically.':phase==='weekend'?'Markets reopen Monday 9:30 AM ET.':'Market closed. Positions open next trading day.'}</div>
+            </div>`}
+          </div>
+
+          <div id="tb-trades" class="tb${currentTab==='trades'?' on':''}" style="overflow-x:auto">
+            ${trades.length?`<table><thead><tr>${['Time','Ticker','Action','Qty','Price','Hold','Rationale'].map(h=>`<th class="mono">${h}</th>`).join('')}</tr></thead>
+            <tbody>${trades.map(t=>`<tr>
+              <td class="mono" style="font-size:11px;color:var(--ink4)">${t.time}</td>
+              <td class="mono" style="font-weight:600;font-size:11px">${t.ticker}</td>
+              <td class="mono" style="font-size:11px;font-weight:700;color:${t.action==='BUY'?'var(--em)':'var(--rose)'}">${t.action}</td>
+              <td class="mono" style="font-size:11px">${t.qty}</td>
+              <td class="mono" style="font-size:11px">$${(t.price||0).toFixed(2)}</td>
+              <td><span class="mono tag" style="background:${hBg(t.hold)};color:${hC(t.hold)};border:1px solid ${hBd(t.hold)}">${t.hold}</span></td>
+              <td style="color:var(--ink3);font-size:11px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(t.rationale||'')}</td>
+            </tr>`).join('')}</tbody></table>
+            <div style="padding:8px 14px;background:var(--amberBg);border-top:1px solid var(--amberBd)"><span class="mono" style="color:var(--amber);font-size:10px">⚠ Simulated trades — no real money</span></div>`
+            :`<div class="empty"><div class="empty-icon">📋</div><div class="empty-title">No Trades Yet</div><div class="empty-sub">Buy orders appear here at market open.</div></div>`}
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card cp">
+          <div class="mono ct">Live News · ${news.length} items</div>
+          ${news.slice(0,10).map(n=>`<div class="ni">
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="mono" style="font-size:10px;color:var(--ink4)">${n.time||''}</span>
+              <span class="mono tag ${n.ticker==='MACRO'?'t-violet':'t-em'}" style="font-size:9px">${n.ticker}</span>
+              <span class="dot" style="background:${n.sentiment==='positive'?'var(--em)':n.sentiment==='negative'?'var(--rose)':'var(--ink4)'}"></span>
+            </div>
+            <div style="color:var(--ink2);font-size:12px;line-height:1.45;margin-top:3px">${esc(n.headline||'')}</div>
+          </div>`).join('')}
+          ${!news.length?'<div style="color:var(--ink4);font-size:12px;padding:20px 0;text-align:center">Fetching news...</div>':''}
+        </div>
+
+        <div class="card cp">
+          <div class="mono ct">Shariah Compliance</div>
+          ${[{l:'S&P 500 Shariah',c:pf.filter(p=>(p.shLabel||'').includes('S&P 500')).length+wl.filter(w=>(w.ref||'').includes('S&P 500')&&!pf.find(p=>p.ticker===w.ticker)).length,co:'var(--em)'},
+             {l:'BMI Shariah',c:pf.filter(p=>(p.shLabel||'').includes('BMI')).length+wl.filter(w=>(w.ref||'').includes('BMI')&&!pf.find(p=>p.ticker===w.ticker)).length,co:'var(--sky)'},
+             {l:'Unlisted (manual)',c:pf.filter(p=>(p.shLabel||'').includes('UNLISTED')).length+wl.filter(w=>(w.ref||'').includes('UNLISTED')&&!pf.find(p=>p.ticker===w.ticker)).length,co:'var(--amber)'}]
+            .map(x=>`<div style="display:flex;justify-content:space-between;padding:5px 0"><span style="color:var(--ink3);font-size:12px">${x.l}</span><span class="mono" style="color:${x.co};font-weight:700;font-size:13px">${x.c}</span></div>`).join('')}
+          <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px;display:flex;justify-content:space-between">
+            <span style="font-weight:600;font-size:12px">Score</span>
+            <span class="mono" style="color:var(--em);font-weight:700;font-size:16px">100%</span>
+          </div>
+          <div style="margin-top:10px;background:var(--emBg);border:1px solid var(--emBd);border-radius:6px;padding:6px 10px">
+            <span class="mono" style="color:var(--em);font-size:10px">Purification: $0.00 CAD — No riba</span>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-sm btn-p mono" style="flex:1" onclick="triggerRefresh()">↻ Refresh</button>
+          <button class="btn btn-sm btn-o mono" style="flex:1" onclick="resetSetup()">Disconnect</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <span class="mono">S&P Shariah · Wealthsimple (sim) · TFSA · Railway + Vercel</span>
+      <span class="mono" style="color:var(--amber)">⚠ Simulation — not financial advice</span>
+    </div>
+  `;
+}
+
+function kpi(l,v,s,c) {
+  return `<div class="kpi"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,${c},transparent)"></div>
+    <div class="mono kl">${l}</div><div class="mono kv" style="color:${c}">${v}</div>${s?`<div class="ks">${s}</div>`:''}</div>`;
+}
+function shTag(p) {
+  const ref = p.shLabel || p.ref || '';
+  const u = ref.includes('UNLISTED');
+  return u ? `<span class="mono tag t-amber">◎ Unlisted</span>` : `<span class="mono tag t-em">✓ Compliant</span>`;
+}
+function chartBars(h) {
+  if (!h || h.length < 2) return '<div style="color:var(--ink4);font-size:11px;padding:20px 0;text-align:center;width:100%">Collecting data...</div>';
+  const min = Math.min(...h.map(v=>v.value)); const max = Math.max(...h.map(v=>v.value)); const range = max-min||1;
+  return h.map(v => {
+    const pct = ((v.value-min)/range)*75+15;
+    return `<div title="${v.time}: $${v.value.toFixed(2)}" style="background:linear-gradient(to top,rgba(5,150,105,.2),rgba(5,150,105,.05));height:${pct}%"></div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
